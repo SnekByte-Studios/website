@@ -1,0 +1,231 @@
+{% extends 'pages/blank.html' %}
+{% load static %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'styles/changelog.css' %}">
+<script src="{% static 'js/marked.min.js' %}"></script>
+
+{% endblock head %}
+
+{% block pageContentBlock %}
+{{ logs|json_script:"logs" }} <!-- Receive and parse the changelogs -->
+
+
+<div id="editLogFormOverlay" class="editLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this); document.getElementById('editFormChangesInputList').innerHTML = '';">
+    <form onclick="event.stopPropagation()" id="editLogForm" class="editLogForm" method="POST" action="{% url 'editChangelogEntry' %}">
+        {% csrf_token %}
+        <label style="float:left;">Date </label><br>
+        <input type="date" name="date" id="editFormDateInputField"><br>
+        <label style="float:left;">Title </label><br>
+        <input type="text" name="title" id="editFormTitleInputField"><br>
+        <label style="float:left;">Changes </label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('editFormChangesInputList'))">+</button><br>
+        <ol id="editFormChangesInputList"></ol>        
+
+        <br><br><br><br>
+        <label style="float:left;">Columns </label><br>
+        <input type="text" name="columns" id="" value="Date" readonly><br>
+        <input type="text" name="columns" id="" value="Title" readonly><br>
+        <input type="text" name="columns" id="" value="Changes" readonly><br>
+        
+        <label type="text" style="float:left;">dbID </label><br>
+        <input type="text" name="dbid" id="editFormDbidInputField" readonly><br>
+        <button type="submit">confirm</button>
+    </form>
+</div>
+
+<div id="addLogFormOverlay" class="addLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this)">
+    <form onclick="event.stopPropagation()" id="addLogForm" class="addLogForm" method="POST" action="{% url 'addNewChangelogEntry' %}">
+        {% csrf_token %}
+        <label style="float: left">Date</label> <br>
+        <input type="date" name="date" value=""> <br>
+        <label style="float: left">Title</label><br>
+        <input type="text" name="title" value=""> <br>
+        <label style="float: left">Changes</label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('changesInputs'))"> + </button>
+        <div>
+            <ol id="changesInputs">
+            </ol>
+            
+        </div>
+        <button type="submit">submit</button>
+    </form>
+</div>
+
+<div id="removeLogFormOverlay" class="removeLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this)">
+    <form onclick="event.stopPropagation()" method="POST" id="removeLogForm" class="removeLogForm" action="{% url 'removeChangelogEntry' %}">
+        {% csrf_token %}
+        <label style="float:left"> Remove log number </label><br>
+        <input name="changeID" value="" id="removeLogFormInputField" readonly> <p>?</p> <br>
+        <button type="submit"> Confirm </button>
+    </form>
+</div>
+
+<script>
+    var selected;
+
+    function deselectLog(dbId)
+    {
+        const log = document.querySelector(`[dbid="${dbId}"]`);
+        log.setAttribute("selected", "");
+        log.style = "background-color: ";
+    }
+
+    function selectLog(dbId)
+    {
+        const log = document.querySelector(`[dbid="${dbId}"]`);
+
+        if (!log.getAttribute("selected")) {
+
+            log.setAttribute("selected", true); 
+            log.style = "background-color: white;";
+
+            if (selected && selected.getAttribute("dbid") != dbId) { deselectLog(selected.getAttribute("dbid")); }
+
+            selected = log;
+        } 
+        else {
+            deselectLog(dbId);
+            selected = null;
+        }
+    }
+
+    function appendNewChangeInputFieldToList(listElement, fieldValue = "") {
+        //const listElement = document.getElementById("changesInputs");
+
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <label>change </label>
+            <input type="text" name="changes" value="${fieldValue}">
+            <button type="button" onclick="this.closest('li').remove();"> - </button><br>`;
+        listElement.appendChild(li);
+    }
+
+    function populateEditForm(dbId)
+    {
+        const log = document.querySelector(`[dbid="${dbId}"]`);
+        const title = log.querySelector("h3").textContent;
+        const editFormDbidInputField = document.getElementById("editFormDbidInputField").value = dbId;
+        
+        var date = log.querySelector("h1").textContent;
+        console.log("date: " + date);
+
+        const dateParts = date.split(".");
+        if (dateParts.length === 3) {
+            const [day, month, year] = dateParts;
+            date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+
+        document.getElementById("editFormDateInputField").value = date;
+        document.getElementById("editFormTitleInputField").value = title;
+        const editFormChangesInputList = document.getElementById("editFormChangesInputList");
+
+
+        var changes = log.querySelectorAll("p");
+        changes.forEach(item => {
+            appendNewChangeInputFieldToList(editFormChangesInputList, item.textContent);
+        })
+    }
+
+</script>
+
+<!-- List of all changelogs. Each log is a single database entry. It containes a single date, single title, and a single list of changes. -->
+<ul id="logsList" class="logsList">
+
+</ul>
+
+<!-- POPULATE PAGE CONTENT -->
+<script type="text/javascript">
+    const logsList = document.getElementById("logsList");
+    const allLogs = JSON.parse(document.getElementById("logs").textContent);
+
+    for (let singleLog of allLogs)
+    {
+        var singleLogContainer = document.createElement("li"); singleLogContainer.className = "Log"; singleLogContainer.setAttribute("selected", "");
+        var title = singleLog["title"];
+        var date = singleLog["date"];
+        var changes = singleLog["changes"];
+        const id = singleLog["id"];
+
+        singleLogContainer.setAttribute("dbid", `${id}`); singleLogContainer.onclick = () => {selectLog(`${id}`)};
+            // Headers
+            var logHeaderContainer = document.createElement("div"); logHeaderContainer.className = "postHeader"; // Container for date and title
+            const dateHeader = document.createElement("h1"); dateHeader.textContent = date; dateHeader.className = "dateHeader";
+            const titleHeader = document.createElement("h3"); titleHeader.textContent = title; titleHeader.className = "titleHeader";
+            // Append header elements in order
+            logHeaderContainer.appendChild(dateHeader);
+            logHeaderContainer.appendChild(titleHeader);
+            singleLogContainer.appendChild(logHeaderContainer);
+            // Changes
+            var changesList = document.createElement("ul"); changesList.className = "changesList"; // Changes listed in the current log
+            changes.forEach(changeContent => {
+                    var pTag = document.createElement("p"); pTag.innerHTML = changeContent;
+                    var changeItem = document.createElement("li");
+                    changeItem.appendChild(pTag);
+                    changesList.appendChild(changeItem);
+                })
+            singleLogContainer.appendChild(changesList);
+            // Remove log button
+            logsList.appendChild(singleLogContainer);
+    }
+</script>
+
+
+<div id="adminPanel" class="adminPanel">
+    <div id="adminButtons">
+        <button onclick="toggleOverlayVisibility(document.getElementById('addLogFormOverlay'))"> + </button>
+        <button onclick="if (selected) {populateEditForm(selected.getAttribute('dbid')); toggleOverlayVisibility(document.getElementById('editLogFormOverlay'));}"> Edit </button>
+        <button onclick="if (selected) {document.getElementById('removeLogFormInputField').value = selected.getAttribute('dbid'); toggleOverlayVisibility(getElementById('removeLogFormOverlay'));}">X</button>
+    </div>
+</div>
+
+<!-- DEFINE ALL FORMS -->
+<div id="editChangelogEntryFormContainer" style="display:none">
+    <form method="POST" id="editChangelogEntryForm" action="{% url 'editChangelogEntry' %}">
+        {% csrf_token %}
+        <label>New value: </label>
+        <input id="editChangelogEntryFormInput" type="text" name="newValue" value=""> <br>
+        <label>Column: </label>
+        <input id="editChangelogEntryFormColumn" type="text" name="column" value="" readonly> <br>
+        <label>Entry ID: </label>
+        <input id="editChangelogEntryFormEntryID" type="text" name="WHEREvalue" value="" readonly> <br>
+        <button type="submit" id="editChangelogEntryFormSubmitButton"> Confirm </button>
+    </form>
+</div>
+
+
+
+
+<!-- DEFINE HELPER FUNCTIONS -->
+<script type="text/javascript">
+    // In the addNewChange form, add another single change input field.
+    function packageChanges(parentID)
+    {
+        const parent = document.getElementById(parentID);
+        if (parent.getAttribute("column") != "Changes") {return;};
+        const dateKey = parent.getAttribute("date");
+        const titleKey = parent.getAttribute("title");
+        const listIndex = parent.getAttribute("listIndex");
+        const inputField = document.getElementById("editChangelogEntryFormInput");
+        var changes = allLogs[dateKey][titleKey]["changes"];
+        var i = 0;
+        changes.forEach(change => {
+            
+            var inputTag = document.createElement("input");
+            inputTag.type = "text"; inputTag.name = "newValue";
+            if (i == listIndex) {inputTag.value = `${inputField.value}`}
+            else {inputTag.value = changes[i]}
+            editChangelogEntryForm.appendChild(inputTag);
+            i ++;
+        })
+        inputField.remove();
+    }
+
+cookies = retrieveCookies();
+username = cookies['USERNAME'];
+if (username == undefined)
+{
+    document.getElementById("adminPanel").style.display = "none";
+}
+</script>
+
+{% endblock pageContentBlock %}
