@@ -1,0 +1,98 @@
+
+
+@media (orientation: portrait)
+{
+    .navbar {
+        padding: 2px 2px;
+        overflow: scroll;
+        text-align: center;    
+        display:flex;
+        width: 100%;
+        height: calc(5vh);
+    }
+
+    .page {
+        display: flex;
+        width: 100vw;
+    }
+    .pageContent {
+        width: 100%;
+    }
+    .pageSidebar {
+        display: none;
+    }
+
+}
+
+
+@media (orientation: landscape)
+{
+    .navbar {
+        padding: 2px 2px;
+        overflow: scroll;
+        text-align: center;    
+        display:flex;
+        width: 100%;
+        height: calc(7.5vh);
+        max-height: 15vh;
+        padding-bottom: 50px;
+    }
+    .loginPanel
+    {
+        display: flex;
+        width: 20%;
+        justify-content: flex-end;
+    }
+
+
+    .loginFormOverlay
+    {
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(49, 49, 49, 0.457);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .loginForm {
+        padding: 5%;
+        background-color: rgba(0, 255, 255, 0.419);
+    }
+
+    .navbarButtonContainer
+    {
+        display: flex;
+        justify-content: flex-start;
+        width: 80%;
+    }
+
+
+    .navbar button {
+        padding: 15px;
+    }
+
+    
+    html, body, .pageContent, .pageSidebar, .page {
+        height: 100%;
+    }
+
+    .page {
+        display:flex;
+        width: 100vw;
+    }
+
+    .pageContent {
+        width: 67vw;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .pageSidebar {
+        background-color: brown;
+        width: 16.5vw;
+    }
+}

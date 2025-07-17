@@ -1,0 +1,140 @@
+.postHeader {
+    display: flex;
+}
+
+ul#logsList > li:hover {
+        background-color: #f0f8ff78;
+}
+
+
+
+
+@media (orientation: portrait)
+{
+
+
+    .adminPanel {
+        position: fixed;
+        
+        padding: 3%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .changesList{
+        list-style-type: disc;
+        padding-left:10%;
+    }
+    .logsList {
+        display: grid;
+        width: 100%;
+        list-style-type: none;  /* optional: removes bullets */
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .postHeader {
+        width: 90%;
+        margin: auto;
+    }
+
+    .titleHeader {
+        width: 50%;
+        text-align: right;
+    }
+
+    .dateHeader {
+        width: 50%;
+        text-align: left;
+    }
+
+    
+    .addLogForm, .editLogForm, .removeLogForm  {
+        background-color: rgba(0, 255, 255, 0.38);  
+        padding: 5%;
+
+    }
+
+    .editLogFormOverlay, .removeLogFormOverlay, .addLogFormOverlay
+    {
+        position: fixed;
+        z-index: 1;
+        background-color: rgba(109, 109, 109, 0.8);
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+}
+
+
+
+@media (orientation: landscape)
+{
+    .adminPanel {
+        padding: 3%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .changesList{
+        list-style-type: disc;
+        padding-left:10%;
+    }
+    .logsList {
+        display: grid;
+        width: 100%;
+        list-style-type: none;  /* optional: removes bullets */
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .postHeader {
+        width: 90%;
+        margin: auto;
+    }
+
+    .titleHeader {
+        width: 50%;
+        text-align: right;
+    }
+
+    .dateHeader {
+        width: 50%;
+        text-align: left;
+    }
+
+    
+    .addLogForm, .editLogForm, .removeLogForm  {
+        background-color: rgba(0, 255, 255, 0.38);  
+        padding: 5%;
+
+    }
+
+    .editLogFormOverlay, .removeLogFormOverlay, .addLogFormOverlay
+    {
+        position: fixed;
+        z-index: 1;
+        background-color: rgba(109, 109, 109, 0.8);
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+}
