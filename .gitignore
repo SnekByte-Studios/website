@@ -1,0 +1,4 @@
+*.sqlite3
+*.key
+*.cert
+*.pem
