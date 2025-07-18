@@ -15,9 +15,9 @@
 <div id="editLogFormOverlay" class="editLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this); document.getElementById('editFormChangesInputList').innerHTML = '';">
     <form onclick="event.stopPropagation()" id="editLogForm" class="editLogForm" method="POST" action="{% url 'editChangelogEntry' %}">
         {% csrf_token %}
-        <label style="float:left;">Date </label><br>
+        <label style="float:left;" required>Date </label><br>
         <input type="date" name="date" id="editFormDateInputField"><br>
-        <label style="float:left;">Title </label><br>
+        <label style="float:left;" required>Title </label><br>
         <input type="text" name="title" id="editFormTitleInputField"><br>
         <label style="float:left;">Changes </label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('editFormChangesInputList'))">+</button><br>
         <ol id="editFormChangesInputList"></ol>        
@@ -38,9 +38,9 @@
     <form onclick="event.stopPropagation()" id="addLogForm" class="addLogForm" method="POST" action="{% url 'addNewChangelogEntry' %}">
         {% csrf_token %}
         <label style="float: left">Date</label> <br>
-        <input type="date" name="date" value=""> <br>
+        <input type="date" name="date" value="" required> <br>
         <label style="float: left">Title</label><br>
-        <input type="text" name="title" value=""> <br>
+        <input type="text" name="title" value="" required> <br>
         <label style="float: left">Changes</label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('changesInputs'))"> + </button>
         <div>
             <ol id="changesInputs">
