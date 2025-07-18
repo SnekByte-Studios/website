@@ -53,7 +53,10 @@
     </div>
 
     <div class="page">
-        <div class="pageSidebar"> </div>
+        <div class="pageSidebar">
+            <img src="{% static 'images/bg.png' %}" type="image">
+        </div>
+        
         <div class="pageContent" id="pageContent" style="background-color: gray;">
             <div class="navbar">
                 <div class="navbarButtonContainer">
@@ -70,8 +73,6 @@
             </div>
             {% block pageContentBlock %}
             {% endblock pageContentBlock %}
-        </div>
-        <div class="pageSidebar"> </div>
     </div>
 </body>
 
