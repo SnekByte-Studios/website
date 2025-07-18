@@ -8,3 +8,4 @@
 logs/
 __pycache__/
 dev_blog/__pycache__/
+dev_blog/migrations/__pycache__/
