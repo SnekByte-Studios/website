@@ -78,8 +78,6 @@
     
     html, body, .pageContent, .pageSidebar, .page {
         height: 100%;
-        position: fixed;
-        z-index: 1;
     }
 
     .page {
@@ -91,6 +89,8 @@
         width: 67vw;
         height: 100%;
         overflow-y: auto;
+        position: fixed;
+        z-index: 1;
     }
 
     .pageSidebar {
