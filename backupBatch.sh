@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PASSWORD=$(cat /mnt/password)
-AUTH_TOKEN=$(cat /mnt/token)
-USERNAME=$(cat /mnt/username)
+PASSWORD=$(cat /mnt/secrets/password)
+AUTH_TOKEN=$(cat /mnt/secrets/token)
+USERNAME=$(cat /mnt/secrets/username)
 
 echo $PASSWORD
 echo $AUTH_TOKEN
