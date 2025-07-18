@@ -87,6 +87,7 @@
 
     .pageContent {
         width: 67vw;
+        margin-left: 16.5vw;
         height: 100%;
         overflow-y: auto;
         position: fixed;
