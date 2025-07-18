@@ -1,3 +1,4 @@
+#!/bin/bash
 USERNAME=$(cat /mnt/secrets/username)
 AUTH_TOKEN=$(cat /mnt/secrets/token)
 
