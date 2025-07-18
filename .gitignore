@@ -6,3 +6,5 @@
 *.log
 
 logs/
+__pycache__/
+dev_blog/__pycache__/
