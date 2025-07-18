@@ -2,3 +2,6 @@
 *.key
 *.crt
 *.pem
+*.pyc
+
+logs/
