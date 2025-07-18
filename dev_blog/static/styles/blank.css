@@ -92,10 +92,11 @@
         overflow-y: auto;
         position: fixed;
         z-index: 1;
+        opacity: 0.8;
     }
 
     .pageSidebar {
         background-color: brown;
-        width: 16.5vw;
+        width: 100vw;
     }
 }
