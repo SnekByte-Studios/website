@@ -27,7 +27,7 @@ def changelogSite(request):
             "id": item[3],  # DB ID
             "title": item[1],
             "date": item[0],
-            #"parsed_date": datetime.strptime(item[0], "%d.%m.%Y"),
+            "parsed_date": "" #datetime.strptime(item[0], "%d.%m.%Y"),
             "changes": ast.literal_eval(item[2]),
         })
 
