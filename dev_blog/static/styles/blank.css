@@ -78,6 +78,8 @@
     
     html, body, .pageContent, .pageSidebar, .page {
         height: 100%;
+        position: fixed;
+        z-index: 1;
     }
 
     .page {
