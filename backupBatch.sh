@@ -13,7 +13,7 @@ cp /home/pi/website/*.crt /home/pi/website_backup/
 cp /home/pi/website/*.key /home/pi/website_backup/
 cp /home/pi/website/*.pem /home/pi/website_backup/
 cp -r /home/pi/website/logs /home/pi/website_backup/
-cd /home/pi/website
+cd /home/pi/website_backup
 
 git add .
 git commit -m "Backup changes: $(date)"
