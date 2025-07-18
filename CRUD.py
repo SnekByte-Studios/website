@@ -84,12 +84,8 @@ class CRUD():
 
     def update(self, database: str, table: str, columns, whereColumn: str, whereValue, values):
         self.openConnection(database + DB_EXTENSION)
-    
-        # Construct SET clause like: "col1 = ?, col2 = ?, col3 = ?"
         set_clause = ", ".join([f"{col} = ?" for col in columns])
         query = f"UPDATE {table} SET {set_clause} WHERE {whereColumn} = ?"
-    
-        # Add the WHERE value at the end of the values list
         parameters = values + [whereValue]
     
         self.ExecuteSecureQuery(query, parameters)
@@ -111,6 +107,7 @@ class CRUD():
         ''' Handle execution in a safe way '''
         try:
             self.cursor.execute(query, params)
+            print(f"attempting query: {query}")
             print(Fore.GREEN + "Secure query successful!" + Style.RESET_ALL)
         except sqlite3.Error as e:
             print(Fore.RED + f"Error while executing the following query: {query}\n{e}" + Style.RESET_ALL)
@@ -137,16 +134,11 @@ class CRUD():
     
     def isSessionValid(self, request):
         activeSessions = self.read("sessions", "sessions")
-        print(activeSessions)
         enteredID = request.COOKIES.get("ID")
         enteredSessionToken = request.COOKIES.get("SESH_TOKEN")
         for id, token, time in activeSessions:
-            if id == enteredID:
-                if enteredSessionToken == token and time < int(time + 1800):
-                    return True
-                else:
-                    print("attempting to delete session with ID: " + enteredID)
-                    self.delete("sessions", "sessions", "ID", enteredID)
+            if id == enteredID and enteredSessionToken == token:
+                return True
         return False
     
 
