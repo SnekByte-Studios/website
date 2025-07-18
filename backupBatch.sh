@@ -13,5 +13,5 @@ cd /home/pi/website
 
 git add .
 git commit -m "Backup changes: $(date)"
-git push https://$USERNAME:$AUTH_TOKEN@github.com/$USERNAME/website_backup.git
+git push https://$USERNAME:$AUTH_TOKEN@github.com/SnekByte-Studios/website_backup.git
 echo "Backup and push completed successfully!"
