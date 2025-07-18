@@ -3,5 +3,6 @@
 *.crt
 *.pem
 *.pyc
+*.log
 
 logs/
