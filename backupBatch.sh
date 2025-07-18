@@ -4,6 +4,10 @@ PASSWORD=$(cat /mnt/password)
 AUTH_TOKEN=$(cat /mnt/token)
 USERNAME=$(cat /mnt/username)
 
+echo $PASSWORD
+echo $AUTH_TOKEN
+echo $USERNAME
+
 cp /home/pi/website/*.sqlite3 /home/pi/website_backup/
 cp /home/pi/website/*.crt /home/pi/website_backup/
 cp /home/pi/website/*.key /home/pi/website_backup/
