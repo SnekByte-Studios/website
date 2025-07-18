@@ -9,3 +9,4 @@ logs/
 __pycache__/
 dev_blog/__pycache__/
 dev_blog/migrations/__pycache__/
+sl_site/__pycache__/
