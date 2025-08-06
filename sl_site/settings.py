@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "dev_blog",
+    "ckeditor",
+    "ckeditor_uploader",
 ]
 
 MIDDLEWARE = [
@@ -71,6 +73,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sl_site.wsgi.application'
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}
+CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -131,3 +141,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024 # 100mb
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024 # 100mb

@@ -5,24 +5,48 @@
 
 <link rel="stylesheet" href="{% static 'styles/changelog.css' %}">
 <script src="{% static 'js/marked.min.js' %}"></script>
-
+<script src="{% static 'js/ckeditorSetup.js' %}"></script>
+<!-- Use standard build instead of full -->
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 {% endblock head %}
 
 {% block pageContentBlock %}
 {{ logs|json_script:"logs" }} <!-- Receive and parse the changelogs -->
 
 
-<div id="editLogFormOverlay" class="editLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this); document.getElementById('editFormChangesInputList').innerHTML = '';">
+<div id="addLogFormOverlay" class="addLogFormOverlay" style="display:none;" onclick="hideAddLogForm()">
+    <form onclick="event.stopPropagation()" id="addLogForm" class="addLogForm" method="POST" action="{% url 'addNewChangelogEntry' %}">
+        {% csrf_token %}
+        <label style="float: left">Date</label> <br>
+        <input type="date" name="date" value="" required> <br>
+        <label style="float: left">Title</label><br>
+        <input type="text" name="title" value="" required> <br>
+        <label style="float: left">Content</label><br>
+        
+        <!-- WYSIWYG Editor Section -->
+        <div id="editor-container">
+            <textarea name="content" id="content-input" style="height: 300px; width: 100%;"></textarea>
+        </div>
+        <button type="submit">submit</button>
+    </form>
+</div>
+
+<!-- EDIT LOG FORM -->
+<div id="editLogFormOverlay" class="editLogFormOverlay" style="display:none;" onclick="hideEditLogForm()">
     <form onclick="event.stopPropagation()" id="editLogForm" class="editLogForm" method="POST" action="{% url 'editChangelogEntry' %}">
         {% csrf_token %}
         <label style="float:left;" required>Date </label><br>
         <input type="date" name="date" id="editFormDateInputField"><br>
         <label style="float:left;" required>Title </label><br>
         <input type="text" name="title" id="editFormTitleInputField"><br>
-        <label style="float:left;">Changes </label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('editFormChangesInputList'))">+</button><br>
-        <ol id="editFormChangesInputList"></ol>        
+        <label style="float:left;">Content </label><br>
+        
+        <!-- WYSIWYG Editor Section for Edit -->
+        <div id="edit-editor-container">
+            <textarea name="content" id="edit-content-input" style="height: 300px; width: 100%;"></textarea>
+        </div>
 
-        <br><br><br><br>
+        <br><br>
         <label style="float:left;">Columns </label><br>
         <input type="text" name="columns" id="" value="Date" readonly><br>
         <input type="text" name="columns" id="" value="Title" readonly><br>
@@ -31,23 +55,6 @@
         <label type="text" style="float:left;">dbID </label><br>
         <input type="text" name="dbid" id="editFormDbidInputField" readonly><br>
         <button type="submit">confirm</button>
-    </form>
-</div>
-
-<div id="addLogFormOverlay" class="addLogFormOverlay" style="display:none;" onclick="toggleOverlayVisibility(this)">
-    <form onclick="event.stopPropagation()" id="addLogForm" class="addLogForm" method="POST" action="{% url 'addNewChangelogEntry' %}">
-        {% csrf_token %}
-        <label style="float: left">Date</label> <br>
-        <input type="date" name="date" value="" required> <br>
-        <label style="float: left">Title</label><br>
-        <input type="text" name="title" value="" required> <br>
-        <label style="float: left">Changes</label> <button type="button" onclick="appendNewChangeInputFieldToList(document.getElementById('changesInputs'))"> + </button>
-        <div>
-            <ol id="changesInputs">
-            </ol>
-            
-        </div>
-        <button type="submit">submit</button>
     </form>
 </div>
 
@@ -100,31 +107,28 @@
         listElement.appendChild(li);
     }
 
-    function populateEditForm(dbId)
-    {
-        const log = document.querySelector(`[dbid="${dbId}"]`);
-        const title = log.querySelector("h3").textContent;
-        const editFormDbidInputField = document.getElementById("editFormDbidInputField").value = dbId;
-        
-        var date = log.querySelector("h1").textContent;
-        console.log("date: " + date);
+    function populateEditForm(dbId) {
+    const log = document.querySelector(`[dbid="${dbId}"]`);
+    const title = log.querySelector("h3").textContent;
+    const editFormDbidInputField = document.getElementById("editFormDbidInputField").value = dbId;
+    
+    var date = log.querySelector("h1").textContent;
+    console.log("date: " + date);
 
-        const dateParts = date.split(".");
-        if (dateParts.length === 3) {
-            const [day, month, year] = dateParts;
-            date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        }
-
-        document.getElementById("editFormDateInputField").value = date;
-        document.getElementById("editFormTitleInputField").value = title;
-        const editFormChangesInputList = document.getElementById("editFormChangesInputList");
-
-
-        var changes = log.querySelectorAll("p");
-        changes.forEach(item => {
-            appendNewChangeInputFieldToList(editFormChangesInputList, item.textContent);
-        })
+    const dateParts = date.split(".");
+    if (dateParts.length === 3) {
+        const [day, month, year] = dateParts;
+        date = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     }
+
+    document.getElementById("editFormDateInputField").value = date;
+    document.getElementById("editFormTitleInputField").value = title;
+    
+    // Get the HTML content from the changes div
+    const changesDiv = log.querySelector(".changesList");
+    const currentContent = changesDiv ? changesDiv.innerHTML : '';
+    document.getElementById("edit-content-input").value = currentContent;
+}
 
 </script>
 
@@ -156,13 +160,15 @@
             logHeaderContainer.appendChild(titleHeader);
             singleLogContainer.appendChild(logHeaderContainer);
             // Changes
-            var changesList = document.createElement("ul"); changesList.className = "changesList"; // Changes listed in the current log
-            changes.forEach(changeContent => {
-                    var pTag = document.createElement("p"); pTag.innerHTML = changeContent;
-                    var changeItem = document.createElement("li");
-                    changeItem.appendChild(pTag);
-                    changesList.appendChild(changeItem);
-                })
+            var changesList = document.createElement("div"); changesList.className = "changesList";
+            changesList.innerHTML = changes;
+
+            //changes.forEach(changeContent => {
+            //        var pTag = document.createElement("p"); pTag.innerHTML = changeContent;
+            //        var changeItem = document.createElement("li");
+            //        changeItem.appendChild(pTag);
+            //        changesList.appendChild(changeItem);
+            //    })
             singleLogContainer.appendChild(changesList);
             // Remove log button
             logsList.appendChild(singleLogContainer);
@@ -171,9 +177,9 @@
 
 
 <div id="adminPanel" class="adminPanel">
-    <div id="adminButtons">
-        <button onclick="toggleOverlayVisibility(document.getElementById('addLogFormOverlay'))"> + </button>
-        <button onclick="if (selected) {populateEditForm(selected.getAttribute('dbid')); toggleOverlayVisibility(document.getElementById('editLogFormOverlay'));}"> Edit </button>
+    <div id="adminButtons" class="adminButtons">
+        <button onclick="showAddLogForm()"> + </button>
+        <button onclick="if (selected) {populateEditForm(selected.getAttribute('dbid')); showEditLogForm();}"> Edit </button>
         <button onclick="if (selected) {document.getElementById('removeLogFormInputField').value = selected.getAttribute('dbid'); toggleOverlayVisibility(getElementById('removeLogFormOverlay'));}">X</button>
     </div>
 </div>
@@ -227,5 +233,4 @@ if (username == undefined)
     document.getElementById("adminPanel").style.display = "none";
 }
 </script>
-
 {% endblock pageContentBlock %}

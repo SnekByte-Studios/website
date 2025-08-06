@@ -1,42 +1,88 @@
 
 
+
+.banner {
+    width: 100vw;
+}
+
+.bg {
+        background-color: brown;
+        width: 100vw;
+        height: 100%;   
+    }
+
+.pageContent{
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.3);
+}
+
+
+.pageContent::after {
+    background: 
+        linear-gradient(90deg, rgba(0,0,0,0.1) 0%, transparent 90%) left,
+        linear-gradient(90deg, rgba(0,0,0,0.1) 0%, transparent 90%) right,
+        linear-gradient(0deg, rgba(0,0,0,0.1) 0%, transparent 90%) top,
+        linear-gradient(0deg, rgba(0,0,0,0.1) 0%, transparent 90%) bottom;
+    background-size: 20px 100%, 20px 100%, 100% 20px, 100% 20px;
+    background-repeat: no-repeat;
+}
+
+.pageContent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 10%, transparent 90%, rgba(0,0,0,0.3) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 10%, transparent 90%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+}
+
 @media (orientation: portrait)
 {
+    .bg img {
+    background-size: auto 100%;
+    background-position: center;
+    height: 100%;
+    }
+    .banner {
+        height: 60px;
+    }
+
     .navbar {
-        padding: 2px 2px;
+        background-color: rgba(6, 209, 189, 0.514);
+        position: fixed;
+        z-index: 1;
+        margin-left: 5vw;
         overflow: scroll;
-        text-align: center;    
+        text-align: center;
         display:flex;
-        width: 100%;
-        height: calc(5vh);
+        width: 80vw;
+        margin-left: 10vw;
+        height: 5vh;
     }
 
     .page {
         display: flex;
         width: 100vw;
+        height: 100vh
     }
+
     .pageContent {
-        width: 100%;
-    }
-    .pageSidebar {
-        display: none;
+        background-color: rgba(6, 209, 189, 0.514);
+        margin-top: 6vh;
+        width: 80vw;
+        margin-left: 10vw;
+        height: 100vh;
+        margin-bottom: 1vh;
+        overflow-y: auto;
+        position: fixed;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
     }
 
-}
-
-
-@media (orientation: landscape)
-{
-    .navbar {
-        padding: 2px 2px;
-        overflow: scroll;
-        text-align: center;    
-        display:flex;
-        width: 100%;
-        height: calc(7.5vh);
-        max-height: 15vh;
-        padding-bottom: 50px;
-    }
     .loginPanel
     {
         display: flex;
@@ -44,13 +90,12 @@
         justify-content: flex-end;
     }
 
-
     .loginFormOverlay
     {
         position: fixed;
         top:0;
         left:0;
-        z-index: 1;
+        z-index: 2;
         width: 100%;
         height: 100%;
         background-color: rgba(49, 49, 49, 0.457);
@@ -68,35 +113,108 @@
         display: flex;
         justify-content: flex-start;
         width: 80%;
+        height: 100%;
+    }
+
+    .navbar button {
+        padding-left: 15px;
+        padding-right:15px;
+    }
+    
+    html, body {
+        height: 100%;
+    }    
+}
+
+
+/* LANDSCAPE */
+
+@media (orientation: landscape)
+{
+    .bg img {
+    background-size: 100vw auto;
+    background-position: center;
+    }
+    .banner {
+        height: 120px;
+    }
+
+    .navbar {
+        background-color: rgba(6, 209, 189, 0.514);
+        position: fixed;
+        z-index: 1;
+        margin-left: 10vw;
+        overflow: scroll;
+        text-align: center;
+        display:flex;
+        width: 80vw;
+        height: 7.5vh;
+    }
+    .loginPanel
+    {
+        display: flex;
+        width: 20%;
+        justify-content: flex-end;
+    }
+
+    .loginFormOverlay
+    {
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(49, 49, 49, 0.457);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .loginForm {
+        padding: 5%;
+        background-color: rgba(0, 255, 255, 0.419);
+    }    
+
+    .navbarButtonContainer
+    {
+        display: flex;
+        justify-content: flex-start;
+        width: 80%;
+        height: 100%;
     }
 
 
     .navbar button {
-        padding: 15px;
+        padding-left: 15px;
+        padding-right:15px;
     }
 
     
-    html, body, .pageContent, .pageSidebar, .page {
+    html, body {
         height: 100%;
     }
 
     .page {
         display:flex;
         width: 100vw;
+        height: 100%
     }
 
     .pageContent {
-        width: 67vw;
-        margin-left: 16.5vw;
-        height: 100%;
+        background-color: rgba(6, 209, 189, 0.514);
+        color: black;
+        margin-top: 9vh;
+        width: 80vw;
+        margin-left: 10vw;
+        margin-bottom: 1vh;
+        height: 100vh;
         overflow-y: auto;
         position: fixed;
         z-index: 1;
-        opacity: 0.8;
+        display: flex;
+        justify-content: center;
     }
 
-    .pageSidebar {
-        background-color: brown;
-        width: 100vw;
-    }
+    
 }

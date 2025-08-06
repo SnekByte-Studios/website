@@ -48,29 +48,25 @@
         </form>
     </div>
 
-
-    <div class="banner"> <img src="banner.jpg">
-    </div>
-
     <div class="page">
-        <div class="pageSidebar">
-            <img src="{% static 'images/bg.png' %}" type="image">
+
+        <div class="bg">
+            <img src="{% static 'images/bg_no_stars2.png' %}" style="width: 100vw;" type="image">
         </div>
         
-        <div class="pageContent" id="pageContent" style="background-color: gray;">
-            <div class="navbar">
-                <div class="navbarButtonContainer">
-                    <button onclick="location.href='/home'"> HOME </button>
-                    <button onclick="location.href='/changelog'"> CHANGELOG </button>
-                    <button> ABOUT US </button>
-                </div>
-                <div id="loginPanel" class="loginPanel">
-                    <p id="loginPanelTextDisplay" class="loginPanelTextDisplay"> Viewing as guest </p><br>
-                    <button id="loginButton" class="loginButton" onclick="toggleOverlayVisibility(document.getElementById('loginFormOverlay'))"> Login </button>
-                </div>
-
-                
+        <div class="navbar">
+            <div class="navbarButtonContainer">
+                <button onclick="location.href='/home'"> HOME </button>
+                <button onclick="location.href='/changelog'"> CHANGELOG </button>
+                <button> ABOUT US </button>
             </div>
+            <div id="loginPanel" class="loginPanel">
+                <p id="loginPanelTextDisplay" class="loginPanelTextDisplay"> Viewing as guest </p><br>
+                <button id="loginButton" class="loginButton" onclick="toggleOverlayVisibility(document.getElementById('loginFormOverlay'))"> Login </button>
+            </div>
+        </div>
+        
+        <div class="pageContent" id="pageContent">
             {% block pageContentBlock %}
             {% endblock pageContentBlock %}
     </div>
